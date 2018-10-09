@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,5 +14,10 @@
 */
 
 $router->get('/', function () use ($router) {
-    return view()->make('index');
+    return view('index');
+});
+
+$router->post('/domains', function (Request $request) use ($router) {
+    var_dump($request);
+    die();
 });
