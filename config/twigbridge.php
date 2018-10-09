@@ -179,6 +179,7 @@ return [
             'head',
             'last',
             'mix',
+            'route'
         ],
 
         /*

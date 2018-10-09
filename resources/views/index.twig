@@ -3,20 +3,23 @@
 {% block content %}
 
 <main role="main">
-
     <div class="jumbotron">
         <div class="container">
             <h1 class="display-3">Page Analyze Tool</h1>
             
-            <form method="post" action="/domains">
+            <form method="post" action="{{ route('domains') }}">
                 <div class="mb-3">
-                    <input class="form-control form-control-lg" type="text" name="url" placeholder="Enter webpage URL">
+                    <input class="form-control form-control-lg{{ errors.url ? ' is-invalid' : '' }}" type="text" name="url" placeholder="Enter webpage URL">
+                    {% if errors.url %}
+                        <div class="invalid-feedback">
+                            {{ errors.url | first }}
+                        </div>
+                    {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg">Send</button>
             </form>
         </div>
     </div>
-
 </main>
 
 {% endblock %}
