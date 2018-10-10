@@ -9,6 +9,12 @@ class WebTest extends \App\Tests\TestCase
 {
     use DatabaseMigrations;
 
+    public function setUp()
+    {
+        parent::setUp();
+        factory('App\Domain', 3)->create();
+    }
+
     public function testGetIndex()
     {
         $this->get('/');
@@ -21,9 +27,8 @@ class WebTest extends \App\Tests\TestCase
         $this->seeInDatabase('domains', ['name' => 'www.example.com']);
     }
 
-    public function testGetDomainDetails()
+    public function testGetDomainsShow()
     {
-        $this->post('/domains', ['url' => 'www.google.com']);
         $this->get('/domains/1');
         $this->assertResponseOk();
     }

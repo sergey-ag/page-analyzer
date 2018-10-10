@@ -62,10 +62,6 @@ $app->singleton(
 |
 */
 
-$app->middleware([
-    App\Http\Middleware\ValidationErrorsMiddleware::class
-]);
-
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);

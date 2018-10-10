@@ -19,22 +19,23 @@ $router->get('/', ['as' => 'index', function () {
     return view('index');
 }]);
 
-$router->post('/domains', ['as' => 'domains', function (Request $request) {
+$router->post('/domains', ['as' => 'domains.store', function (Request $request) {
     try {
         $this->validate($request, [
             'url' => 'required'
         ]);
     } catch (ValidationException $e) {
-        $_SESSION['errors'] = $e->errors();
-        return redirect()->route('index');
+        return view('index', [
+            'errors' => $e->errors()
+        ]);
     }
     $domain = Domain::create(['name' => $request->input('url')]);
-    return redirect()->route('domains.details', ['id' => $domain->id]);
+    return redirect()->route('domains.show', ['id' => $domain->id]);
 }]);
 
-$router->get('/domains/{id}', ['as' => 'domains.details', function (int $id) {
+$router->get('/domains/{id}', ['as' => 'domains.show', function (int $id) {
     if ($domain = Domain::find($id)) {
-        return view('domain', [
+        return view('domains.show', [
             'domain' => $domain->toArray()
         ]);
     }
