@@ -1,0 +1,29 @@
+{% extends 'templates/common.twig' %}
+
+{% block content %}
+
+<main role="main">
+    <div class="row justify-content-center">
+        <div class="col-9">
+            <table class="table mt-3">
+                <thead class="thead bg-primary">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Domain</th>
+                    </tr>
+                </thead>
+                <tbody>           
+                    {% for domain in domains %}
+                        <tr>
+                            <th scope="row">{{ domain.id }}</th>
+                            <td><a href="{{ route('domains.show', {"id": domain.id}) }}">{{ domain.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include 'templates/partials/pagination.twig' %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

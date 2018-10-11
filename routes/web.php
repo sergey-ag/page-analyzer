@@ -19,6 +19,12 @@ $router->get('/', ['as' => 'index', function () {
     return view('index');
 }]);
 
+$router->get('/domains', ['as' => 'domains.index', function (Request $request) {
+    $page = $request->input('page') > 0 ? (int) $request->input('page') : 1;
+    $data = Domain::getPage($page);
+    return view('domains.index', $data);
+}]);
+
 $router->post('/domains', ['as' => 'domains.store', function (Request $request) {
     try {
         $this->validate($request, [
@@ -34,10 +40,8 @@ $router->post('/domains', ['as' => 'domains.store', function (Request $request) 
 }]);
 
 $router->get('/domains/{id}', ['as' => 'domains.show', function (int $id) {
-    if ($domain = Domain::find($id)) {
-        return view('domains.show', [
+    $domain = Domain::findOrFail($id);
+    return view('domains.show', [
             'domain' => $domain->toArray()
-        ]);
-    }
-    return abort(404);
+    ]);
 }]);

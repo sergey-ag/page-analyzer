@@ -9,10 +9,12 @@ class WebTest extends \App\Tests\TestCase
 {
     use DatabaseMigrations;
 
+    private $domainsTestSet;
+
     public function setUp()
     {
         parent::setUp();
-        factory('App\Domain', 3)->create();
+        $this->domainsTestSet = factory('App\Domain', 1)->create();
     }
 
     public function testGetIndex()
@@ -29,7 +31,14 @@ class WebTest extends \App\Tests\TestCase
 
     public function testGetDomainsShow()
     {
-        $this->get('/domains/1');
+        $this->get("/domains/{$this->domainsTestSet->first()->id}");
+        $this->assertResponseOk();
+    }
+
+    public function testGetDomains()
+    {
+        $this->seeInDatabase('domains', ['name' => $this->domainsTestSet->first()->name]);
+        $this->get('/domains');
         $this->assertResponseOk();
     }
 }
