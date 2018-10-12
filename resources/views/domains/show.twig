@@ -9,6 +9,8 @@
                 <div class="card-header text-white bg-primary">{{ domain.name }}</div>
                 <div class="card-body">
                     <p class="card-text">id: {{ domain.id }}</p>
+                    <p class="card-text">Content-Length: {{ domain.content_length }}</p>
+                    <p class="card-text">Response Code: {{ domain.response_code }}</p>
                     <p class="card-text">Created at: {{ domain.created_at }}</p>
                     <p class="card-text">Updated at: {{ domain.updated_at }}</p>
                 </div>

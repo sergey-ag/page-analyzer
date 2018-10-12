@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use GuzzleHttp\Exception\TransferException;
 use App\Domain;
 
 /*
@@ -19,10 +20,11 @@ $router->get('/', ['as' => 'index', function () {
     return view('index');
 }]);
 
-$router->get('/domains', ['as' => 'domains.index', function (Request $request) {
-    $page = $request->input('page') > 0 ? (int) $request->input('page') : 1;
-    $data = Domain::getPage($page);
-    return view('domains.index', $data);
+$router->get('/domains', ['as' => 'domains.index', function () {
+    $domains = Domain::paginate(10);
+    return view('domains.index', [
+        'domains' => $domains
+    ]);
 }]);
 
 $router->post('/domains', ['as' => 'domains.store', function (Request $request) {
@@ -35,7 +37,34 @@ $router->post('/domains', ['as' => 'domains.store', function (Request $request) 
             'errors' => $e->errors()
         ]);
     }
-    $domain = Domain::create(['name' => $request->input('url')]);
+
+    $url = $request->input('url');
+
+    $guzzle = app('GuzzleHttp\Client');
+    try {
+        $response = $guzzle->request('GET', $url);
+    } catch (TransferException $e) {
+        return view('index', [
+            'errors' => [
+                'url' => ['Bad URL or transfer error.']
+            ]
+        ]);
+    }
+    $body = $response->getBody()->getContents();
+    if (array_key_exists(0, $response->getHeader('content-length'))) {
+        $contentLength = (int) $response->getHeader('content-length')[0];
+    } else {
+        $contentLength = strlen($body);
+    }
+    $responseCode = $response->getStatusCode();
+
+    $domain = Domain::create([
+        'name' => $url,
+        'content_length' => $contentLength,
+        'response_code' => $responseCode,
+        'body' => $body
+    ]);
+   
     return redirect()->route('domains.show', ['id' => $domain->id]);
 }]);
 

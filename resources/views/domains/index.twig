@@ -10,6 +10,8 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Domain</th>
+                        <th scope="col">Content-Length</th>
+                        <th scope="col">Response Code</th>
                     </tr>
                 </thead>
                 <tbody>           
@@ -17,11 +19,13 @@
                         <tr>
                             <th scope="row">{{ domain.id }}</th>
                             <td><a href="{{ route('domains.show', {"id": domain.id}) }}">{{ domain.name }}</a></td>
+                            <td>{{ domain.content_length }}</td>
+                            <td>{{ domain.response_code }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% include 'templates/partials/pagination.twig' %}
+            {{ domains.links | raw }}
         </div>
     </div>
 </main>

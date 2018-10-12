@@ -51,6 +51,10 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->bind('GuzzleHttp\Client', function ($app) {
+    return new GuzzleHttp\Client();
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
