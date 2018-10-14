@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use GuzzleHttp\Exception\TransferException;
+use DiDom\Document;
 use App\Domain;
 
 /*
@@ -37,12 +38,9 @@ $router->post('/domains', ['as' => 'domains.store', function (Request $request) 
             'errors' => $e->errors()
         ]);
     }
-
     $url = $request->input('url');
-
-    $guzzle = app('GuzzleHttp\Client');
     try {
-        $response = $guzzle->request('GET', $url);
+        $response = app()->make('Guzzle')->request('GET', $url);
     } catch (TransferException $e) {
         return view('index', [
             'errors' => [
@@ -57,20 +55,28 @@ $router->post('/domains', ['as' => 'domains.store', function (Request $request) 
         $contentLength = strlen($body);
     }
     $responseCode = $response->getStatusCode();
-
+    $document = new Document($body);
+    $h1 = $document->first('h1');
+    $documentHeader = $h1 ? $h1->text() : '';
+    $meta1 = $document->first('meta[name=keywords]');
+    $keywords = $meta1 ? $meta1->getAttribute('content') : '';
+    $meta2 = $document->first('meta[name=description]');
+    $description = $meta2 ? $meta2->getAttribute('content') : '';
     $domain = Domain::create([
         'name' => $url,
         'content_length' => $contentLength,
         'response_code' => $responseCode,
-        'body' => $body
+        'body' => $body,
+        'header' => $documentHeader,
+        'keywords' => $keywords,
+        'description' => $description
     ]);
-   
     return redirect()->route('domains.show', ['id' => $domain->id]);
 }]);
 
 $router->get('/domains/{id}', ['as' => 'domains.show', function (int $id) {
     $domain = Domain::findOrFail($id);
     return view('domains.show', [
-            'domain' => $domain->toArray()
+            'domain' => $domain
     ]);
 }]);

@@ -10,7 +10,10 @@ class Domain extends Model
         'name',
         'content_length',
         'response_code',
-        'body'
+        'body',
+        'header',
+        'keywords',
+        'description'
     ];
 
     protected $dates = [];

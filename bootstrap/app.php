@@ -51,7 +51,7 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->bind('GuzzleHttp\Client', function ($app) {
+$app->bind('Guzzle', function ($app) {
     return new GuzzleHttp\Client();
 });
 

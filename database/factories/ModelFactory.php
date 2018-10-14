@@ -23,6 +23,9 @@ $factory->define(App\Domain::class, function (Faker\Generator $faker) {
         'name' => $faker->domainName,
         'content_length' => 255,
         'response_code' => 200,
-        'body' => $faker->text(255)
+        'body' => $faker->text(255),
+        'header' => $faker->text(31),
+        'keywords' => $faker->text(63),
+        'description' => $faker->text(127)
     ];
 });
